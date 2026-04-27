@@ -1,3 +1,9 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+li.section-li > .section {
+  grid-template-columns: max-content 3fr 1fr;
+
+  & .meta {
+    white-space: nowrap;
+  }
+}
