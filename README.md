@@ -1,17 +1,26 @@
-# Quartz v4
+# Oh-Research Blog
 
-> “[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally gets clues as to what the world is and what might be important.” — Richard Hamming
+개인 노트와 글을 모아두는 공간.
 
-Quartz is a set of tools that helps you publish your [digital garden](https://jzhao.xyz/posts/networked-thought) and notes as a website for free.
+🔗 https://oh-research.github.io/blog
 
-🔗 Read the documentation and get started: https://quartz.jzhao.xyz/
+## 운영 방식
 
-[Join the Discord Community](https://discord.gg/cRFFHYye7t)
+- 글은 옵시디언 볼트 `2ndSeminBrain/blog/`에서 관리
+- 폴더 구조 = 사이트 카테고리
+- `sync.py`로 옵시디언 → `content/` 동기화
+- GitHub Actions가 `main` 브랜치 푸시 시 자동 빌드·배포
 
-## Sponsors
+자세한 운영 가이드는 옵시디언의 `quartz-blog-guide.md` 참고.
 
-<p align="center">
-  <a href="https://github.com/sponsors/jackyzha0">
-    <img src="https://cdn.jsdelivr.net/gh/jackyzha0/jackyzha0/sponsorkit/sponsors.svg" />
-  </a>
-</p>
+## 작성·발행 명령어
+
+```bash
+blog-sync      # 옵시디언 blog/ → content/ 복사
+blog-preview   # 로컬 미리보기 (http://localhost:8080)
+blog-deploy    # 자동 커밋 + 푸시 → 배포
+```
+
+## 기술 스택
+
+[Quartz v4](https://quartz.jzhao.xyz/) 기반 정적 사이트 생성기 + GitHub Pages.
