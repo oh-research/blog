@@ -7,3 +7,9 @@ li.section-li > .section {
     white-space: nowrap;
   }
 }
+
+// 본문 이미지 가운데 정렬
+article img {
+  display: block;
+  margin-inline: auto;
+}
