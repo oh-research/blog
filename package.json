@@ -20,7 +20,7 @@
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "sync": "python3 sync.py",
     "preview": "python3 sync.py && npx quartz build --serve",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/blog-deploy.sh"
   },
   "engines": {
     "npm": ">=10.9.2",
