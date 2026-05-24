@@ -10,5 +10,6 @@ private/
 .replit
 replit.nix
 sync.py
+scripts/
 __pycache__/
 *.pyc
