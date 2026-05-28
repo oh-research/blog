@@ -5,7 +5,7 @@ tags:
   - naver
   - macos
 created: 2026-05-24 14:54
-updated: 2026-05-27 22:40
+updated: 2026-05-29 07:21
 ---
 
 > [!abstract] 한 줄 요약
