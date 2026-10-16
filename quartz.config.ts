@@ -1,5 +1,6 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
+import * as Component from "./quartz/components"
 
 /**
  * Quartz 4 Configuration
@@ -17,9 +18,10 @@ const config: QuartzConfig = {
       tagId: "G-ZB140MEDPC",
     },
     locale: "ko-KR",
-    baseUrl: "oh-research.github.io/blog",
+    // baseUrl: "oh-research.github.io/blog",
+    baseUrl: "blog.ohsemin.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "modified",
+    defaultDateType: "created", // 블로그: 대표 날짜 = 작성일 (PLAN.md 디자인 결정 7)
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
@@ -28,12 +30,13 @@ const config: QuartzConfig = {
         body: "IBM Plex Sans KR",
         code: "IBM Plex Mono",
       },
+      // 라이트 고정. darkMode는 타입상 필수라 lightMode와 같은 값을 넣는다 (토글 없음).
       colors: {
         lightMode: {
-          light: "#ffffff",
-          lightgray: "#e4ebf2",
-          gray: "#9aa7b4",
-          darkgray: "#3d4a57",
+          light: "#fcfcfc",
+          lightgray: "#e6eaee",
+          gray: "#8a96a3",
+          darkgray: "#2a3540",
           dark: "#0f1b2d",
           secondary: "#1e6fd9",
           tertiary: "#5b9bd5",
@@ -41,15 +44,15 @@ const config: QuartzConfig = {
           textHighlight: "#cfe5ff88",
         },
         darkMode: {
-          light: "#0d1620",
-          lightgray: "#1f2c3b",
-          gray: "#5e6b7a",
-          darkgray: "#c8d2dc",
-          dark: "#eaf1f8",
-          secondary: "#5fa8ff",
-          tertiary: "#8ec5ff",
-          highlight: "rgba(95, 168, 255, 0.12)",
-          textHighlight: "#5fa8ff44",
+          light: "#fcfcfc",
+          lightgray: "#e6eaee",
+          gray: "#8a96a3",
+          darkgray: "#2a3540",
+          dark: "#0f1b2d",
+          secondary: "#1e6fd9",
+          tertiary: "#5b9bd5",
+          highlight: "rgba(30, 111, 217, 0.08)",
+          textHighlight: "#cfe5ff88",
         },
       },
     },
@@ -63,7 +66,7 @@ const config: QuartzConfig = {
       Plugin.SyntaxHighlighting({
         theme: {
           light: "github-light",
-          dark: "github-dark",
+          dark: "github-light", // 다크 모드 없음
         },
         keepBackground: false,
       }),
@@ -79,7 +82,8 @@ const config: QuartzConfig = {
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
-      Plugin.FolderPage(),
+      // "N개 항목" 문구 제거 (PLAN.md 디자인 결정 9)
+      Plugin.FolderPage({ pageBody: Component.FolderContent({ showFolderCount: false }) }),
       Plugin.TagPage(),
       Plugin.ContentIndex({
         enableSiteMap: true,
