@@ -1,15 +1,574 @@
 @use "./base.scss";
+@use "./variables.scss" as *;
 
-li.section-li > .section {
-  grid-template-columns: max-content 3fr 1fr;
+// ─────────────────────────────────────────────────────────────
+// 커스텀 스타일. 디자인 결정: ~/Documents/blog/PLAN.md "디자인 결정" 섹션.
+// base.scss(엔진)를 덮어쓰는 방식 — 엔진 파일은 건드리지 않는다.
+// ─────────────────────────────────────────────────────────────
 
-  & .meta {
-    white-space: nowrap;
+:root {
+  --muted: #6b7784; // 메타·요약·푸터용 회색 (본문 #2a3540보다 연함)
+  --code-bg: #f0f2f4; // 인라인 코드 배경 (중립 회색)
+  --content-width: 720px;
+  --toc-width: 240px;
+}
+
+// ── 1. 레이아웃: 2열 (본문 + 오른쪽 TOC), 왼쪽 열 없음 ──────────
+
+.page {
+  max-width: calc(var(--content-width) + var(--toc-width) + 6rem);
+
+  & > #quartz-body {
+    // 데스크톱: 본문 | TOC
+    grid-template-columns: minmax(0, var(--content-width)) var(--toc-width);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "grid-header grid-sidebar-right"
+      "grid-center grid-sidebar-right"
+      "grid-footer grid-sidebar-right";
+    column-gap: 3rem;
+    padding: 0 1.5rem;
+
+    @media all and ($tablet) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "grid-header"
+        "grid-center"
+        "grid-footer";
+      max-width: var(--content-width);
+      margin: 0 auto;
+    }
+
+    @media all and ($mobile) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "grid-header"
+        "grid-center"
+        "grid-footer";
+      padding: 0 1rem;
+    }
+
+    // 왼쪽 sidebar는 비어 있음 — 자리 차지 안 하도록
+    & .sidebar.left {
+      display: none;
+    }
+
+    // 오른쪽: TOC만, 헤더 높이만큼 내려서 시작
+    & .sidebar.right {
+      padding: calc(#{$topSpacing} + 3.4rem) 0 2rem 0;
+      gap: 0;
+
+      @media all and not ($desktop) {
+        display: none;
+      }
+    }
+
+    & .page-header {
+      margin-top: 2.5rem;
+
+      @media all and ($mobile) {
+        margin-top: 1.5rem;
+      }
+    }
   }
 }
 
-// 본문 이미지 가운데 정렬
+// ── 헤더: 사이트명 + 카테고리 + 검색 ─────────────────────────
+
+header {
+  margin: 0 0 2.5rem 0;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--lightgray);
+  gap: 1rem;
+  align-items: baseline;
+
+  @media all and ($mobile) {
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  // 검색 버튼: 아이콘만, 오른쪽 끝
+  & > .search {
+    max-width: none;
+    min-width: 0;
+    margin-left: auto;
+    align-self: center;
+
+    & > .search-button {
+      border: none;
+      height: auto;
+      padding: 0.25rem;
+
+      & > p {
+        display: none;
+      }
+      & svg {
+        margin: 0;
+        width: 20px;
+        min-width: 20px;
+      }
+    }
+  }
+}
+
+// ── 2. 타이포그래피 ─────────────────────────────────────────
+
+html {
+  font-size: 17px;
+}
+
+body {
+  color: var(--darkgray);
+  -webkit-font-smoothing: antialiased;
+}
+
+tbody,
+li,
+p {
+  line-height: 1.7;
+}
+
+p {
+  margin: 0 0 1.1em 0;
+}
+
+article {
+  & > *:first-child {
+    margin-top: 0;
+  }
+}
+
+h1.article-title {
+  font-size: 1.85rem;
+  line-height: 1.35;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+// 메타 줄과 본문 사이 간격
+.page-header {
+  margin-bottom: 1.6rem;
+}
+
+// 제목 안 인라인 코드: 배경 없이 글꼴만
+h1 code,
+h2 code,
+h3 code,
+h4 code {
+  background: none;
+  padding: 0;
+  font-size: 0.92em;
+  font-weight: inherit;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2.6rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--lightgray);
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 1.18rem;
+  margin-top: 1.9rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.4;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+ul,
+ol {
+  margin: 0 0 1.1em 0;
+  padding-left: 1.4em;
+}
+
+li + li {
+  margin-top: 0.25em;
+}
+
+// ── 3. 색·링크 위계 ─────────────────────────────────────────
+
+// 본문 링크만 파랑 + 밑줄. 그 외(메뉴·제목·메타)는 각 컴포넌트에서 글자색으로 지정.
+article a {
+  color: var(--secondary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--secondary) 40%, transparent);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+
+  &:hover {
+    color: var(--secondary);
+    text-decoration-color: var(--secondary);
+  }
+
+  // 내부 링크의 하이라이트 박스 제거
+  &.internal {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  // 외부 링크 ↗ 표시 (Quartz가 넣는 svg 아이콘은 숨기고 텍스트 화살표로)
+  &.external {
+    & .external-icon {
+      display: none;
+    }
+    &::after {
+      content: "↗";
+      font-size: 0.75em;
+      margin-left: 0.15em;
+      vertical-align: super;
+      line-height: 0;
+      opacity: 0.7;
+    }
+  }
+}
+
+// 제목 옆 앵커(#)는 밑줄 없이
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  & > a[role="anchor"] {
+    text-decoration: none;
+  }
+}
+
+// ── 4. 코드 ─────────────────────────────────────────────────
+
+// 인라인 코드
+code {
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+  color: var(--dark);
+}
+
+// 코드 블록 공통
+pre {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  margin: 1.1em 0;
+  background: #fff;
+  line-height: 1.55;
+
+  & > code {
+    font-size: 0.85rem;
+    padding: 0.7rem 0;
+    background: none;
+    line-height: 1.55;
+  }
+}
+
+// 명령 블록(rehype-pretty-code, 언어 있음): 연회색 배경
+figure[data-rehype-pretty-code-figure] {
+  margin: 1.1em 0;
+  line-height: 1.55;
+
+  & > pre {
+    background: #f6f8fa;
+    margin: 0;
+    padding: 0 0.9rem;
+
+    & > code > [data-line] {
+      padding: 0;
+      border-left: none;
+
+      // 줄번호 없음
+      &::before {
+        content: none;
+      }
+    }
+  }
+}
+
+// 출력 블록(언어 없음, 하이라이트 없음): 배경 없이 왼쪽 세로선만
+pre:not([data-language]) {
+  border: none;
+  border-left: 3px solid var(--lightgray);
+  border-radius: 0;
+  background: transparent;
+  padding: 0 0 0 0.9rem;
+
+  & > code {
+    color: var(--muted);
+    padding: 0.2rem 0;
+  }
+
+  & > .clipboard-button {
+    margin: 0;
+  }
+}
+
+// 명령 블록 바로 뒤에 오는 출력 블록은 붙여서
+figure[data-rehype-pretty-code-figure] + pre:not([data-language]) {
+  margin-top: -0.5em;
+}
+
+.clipboard-button {
+  border-color: var(--lightgray);
+  background-color: #fff;
+  & > svg {
+    fill: var(--gray);
+    filter: none;
+  }
+}
+
+// ── 5. 콜아웃 ───────────────────────────────────────────────
+
+// abstract: 리드 문단 스타일 (박스 없음)
+.callout[data-callout="abstract"] {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0 0 1.75rem 0;
+
+  & > .callout-title {
+    display: none;
+  }
+
+  & > .callout-content > p {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--muted);
+    margin: 0;
+  }
+}
+
+// 나머지 콜아웃: 팔레트에 맞춘 색
+.callout {
+  margin: 1.25em 0;
+  border-radius: 6px;
+  border-width: 1px;
+
+  &[data-callout],
+  &[data-callout="note"],
+  &[data-callout="info"],
+  &[data-callout="todo"] {
+    --color: #1e6fd9;
+    --border: #1e6fd933;
+    --bg: #1e6fd90d;
+  }
+
+  &[data-callout="tip"],
+  &[data-callout="success"] {
+    --color: #1a8f6d;
+    --border: #1a8f6d33;
+    --bg: #1a8f6d0d;
+  }
+
+  &[data-callout="warning"],
+  &[data-callout="question"] {
+    --color: #c2762a;
+    --border: #c2762a33;
+    --bg: #c2762a0d;
+  }
+
+  &[data-callout="failure"],
+  &[data-callout="danger"],
+  &[data-callout="bug"] {
+    --color: #c93c3c;
+    --border: #c93c3c33;
+    --bg: #c93c3c0d;
+  }
+
+  & > .callout-title {
+    padding: 0.75rem 0 0.4rem 0;
+    --icon-size: 16px;
+  }
+
+  & > .callout-content {
+    & > :last-child {
+      margin-bottom: 0.85rem;
+    }
+    & p {
+      line-height: 1.65;
+    }
+  }
+}
+
+// ── 6. 표 ───────────────────────────────────────────────────
+
+.table-container {
+  margin: 1.25em 0;
+
+  & > table {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-size: 0.94rem;
+
+    & > * {
+      line-height: 1.55;
+    }
+
+    th,
+    td {
+      min-width: 0;
+      padding: 0.5rem 0.75rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f5f7;
+      border-bottom: 1px solid var(--lightgray);
+      font-weight: 600;
+      color: var(--dark);
+      white-space: nowrap;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--lightgray);
+      &:last-child {
+        border-bottom: 1px solid var(--lightgray);
+      }
+    }
+  }
+}
+
+// ── 7. 이미지 ───────────────────────────────────────────────
+
 article img {
   display: block;
-  margin-inline: auto;
+  margin: 1.25em auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--lightgray);
+}
+
+// ── 8. 일반 인용 ────────────────────────────────────────────
+
+blockquote:not(.callout) {
+  margin: 1.25em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--lightgray);
+  color: var(--muted);
+  font-style: normal;
+
+  & > p {
+    color: var(--muted);
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ── 9. 태그 (글 끝) ─────────────────────────────────────────
+
+.page-footer {
+  & .tags {
+    margin: 2rem 0 0 0;
+    gap: 0.4rem;
+  }
+
+  & a.internal.tag-link {
+    background: var(--code-bg);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    text-decoration: none;
+
+    &::before {
+      content: "#";
+      opacity: 0.6;
+    }
+
+    &:hover {
+      color: var(--secondary);
+      background: var(--highlight);
+    }
+  }
+}
+
+// 본문 끝 hr(엔진이 넣음): 홈에서는 소개와 최근 글 사이 구분선 역할 — 여백만 조정.
+// 뒤에 올 내용(태그·최근 글)이 없으면 숨김 (목록 페이지).
+.center > hr {
+  margin: 2.5rem 0 0 0;
+
+  &:has(+ .page-footer:empty) {
+    display: none;
+  }
+}
+
+// ── 10. TOC ─────────────────────────────────────────────────
+
+.toc {
+  position: sticky;
+  top: 2.5rem;
+
+  & button.toc-header {
+    & h3 {
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    & .fold {
+      display: none;
+    }
+  }
+
+  & ul.toc-content.overflow {
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+
+    & > li {
+      margin: 0.3rem 0;
+      & > a {
+        color: var(--muted);
+        opacity: 1;
+        font-weight: 400;
+        text-decoration: none;
+
+        &.in-view {
+          color: var(--dark);
+          opacity: 1;
+        }
+        &:hover {
+          color: var(--secondary);
+        }
+      }
+    }
+
+    @for $i from 0 through 6 {
+      & .depth-#{$i} {
+        padding-left: calc(0.75rem * #{$i});
+      }
+    }
+  }
+}
+
+// ── 11. 목록 페이지(카테고리·태그) ───────────────────────────
+
+.page-listing {
+  & > p {
+    display: none; // "N개 항목" 류 안내문 (태그 페이지)
+  }
+}
+
+// ── 12. 팝오버 ──────────────────────────────────────────────
+
+.popover {
+  & h2 {
+    border-bottom: none;
+  }
 }
