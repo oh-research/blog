@@ -20,7 +20,7 @@ draft: false
 
 맥북에 Dell U2720Q를 연결해 씁니다. macOS는 Apple 디스플레이가 아닌 외장 모니터의 밝기를 기본 상태에서는 조절해 주지 않아서 밝기를 바꿀 때마다 모니터 오른쪽 하단의 버튼으로 OSD 메뉴를 열어야 했습니다.
 
-U2720Q는 **DDC/CI**(Display Data Channel / Command Interface)를 지원합니다. 컴퓨터가 디스플레이 케이블로 모니터에 명령을 보내는 프로토콜입니다. 이 프로토콜을 쓰면 소프트웨어 디밍이 아니라 모니터의 하드웨어 밝기 자체를 컴퓨터에서 바꿀 수 있습니다. Dell 공식 앱인 **Dell Display and Peripheral Manager(DDPM)**가 이 프로토콜로 모니터를 제어합니다. DDPM을 설치하고 밝기 조절이 되기까지의 과정을 먼저 적고 그다음에 DDPM으로 할 수 있는 기능들을 메뉴별로 남겨 둡니다.
+U2720Q는 **DDC/CI**(Display Data Channel / Command Interface)를 지원합니다. 컴퓨터가 디스플레이 케이블로 모니터에 명령을 보내는 프로토콜입니다. 이 프로토콜을 쓰면 소프트웨어 디밍이 아니라 모니터의 하드웨어 밝기 자체를 컴퓨터에서 바꿀 수 있습니다. Dell 공식 앱인 **Dell Display and Peripheral Manager**(DDPM)가 이 프로토콜로 모니터를 제어합니다. DDPM을 설치하고 밝기 조절이 되기까지의 과정을 먼저 적고 그다음에 DDPM으로 할 수 있는 기능들을 메뉴별로 남겨 둡니다.
 
 작업 당시 구성입니다.
 
@@ -103,7 +103,7 @@ OSD에서 확인한 모니터의 펌웨어는 **M2T104**였고 최신은 **M2T10
 
 - 다른 외장 모니터는 모두 빼고 **U2720Q만 USB-C로 직결**합니다. 같은 폴더의 `Firmware Update Instruction.pdf`는 모니터 전원을 연결한 채 USB 업스트림 케이블을 꽂아 두고 끝날 때까지 뽑지 말라고 안내합니다.
 - 업데이트 중에 화면 보호기나 잠자기가 켜지면 중단될 수 있어서 미리 꺼 두고 끝날 때까지 지켜봅니다.
-- 안내문 기준으로 5~6분이 걸립니다.
+- 20분 정도 걸립니다.
 
 위 앱을 실행하자 업데이트가 진행됐고 OSD에서 **M2T105**로 바뀐 것을 확인했습니다.
 
@@ -180,7 +180,7 @@ M2T105로 올린 뒤에는 밝기/대비 메뉴가 활성화되어 메뉴 막대
 - [How to Use Dell Display and Peripheral Manager for macOS](https://www.dell.com/support/kbdoc/en-cy/000201067/dell-display-and-peripheral-manager-for-macos) — Dell. DDC/CI가 꺼져 있으면 Easy Arrange만 동작한다는 설명과 점검 항목
 - [Dell Display and Peripheral Manager for Windows](https://www.dell.com/support/kbdoc/000287285) — Dell
 - [MonitorControl](https://github.com/MonitorControl/MonitorControl) — GitHub. 오픈소스 DDC 밝기 조절 앱
-- `/Applications/Dell/firmware/U2720Q/Firmware Update Instruction.pdf` — 설치 프로그램이 함께 깔아 두는 안내문. 사전 조건(전원·USB 업스트림 케이블·소요 시간 5~6분)과 오류별 조치
+- `/Applications/Dell/firmware/U2720Q/Firmware Update Instruction.pdf` — 설치 프로그램이 함께 깔아 두는 안내문. 사전 조건(전원·USB 업스트림 케이블)과 오류별 조치
 - [U2720Q, MacBook Pro 2021, firmware M2T105 not applied](https://www.dell.com/community/Monitors/U2720Q-MacBook-Pro-2021-firmware-M2T105-not-applied/m-p/8360478) — Dell Community. 설치 후 버전이 그대로인 증상
 - [U2720Q, MacBook Air M1, cannot update firmware M2T105, #2](https://www.dell.com/community/Monitors/U2720Q-MacBook-Air-M1-cannot-update-firmware-M2T105-2/m-p/8137188) — Dell Community
 - [U2720Q, macOS, cannot update firmware M2T105, #2](https://www.dell.com/community/Monitors/U2720Q-MacBook-Air-M1-cannot-update-firmware-M2T105-2/m-p/8137110) — Dell Community
